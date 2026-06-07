@@ -22,17 +22,17 @@ function BigStat({ label, value, sub, color, icon }) {
   )
 }
 
-export default function Dashboard() {
+export default function Dashboard({ api }) {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await axios.get('/api/vehicles')
+        const res = await axios.get(`${api}/api/vehicles`)
         const list = res.data.vehicles
         const details = await Promise.all(
-          list.map(v => axios.get(`/api/emi/${v.registration_number}`).then(r => r.data))
+          list.map(v => axios.get(`${api}/api/emi/${v.registration_number}`).then(r => r.data))
         )
         setStats({
           totalVehicles: list.length,
@@ -126,4 +126,4 @@ export default function Dashboard() {
       </div>
     </div>
   )
-}   
+}

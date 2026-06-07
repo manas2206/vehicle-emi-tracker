@@ -4,6 +4,8 @@ import SearchBar from './components/SearchBar'
 import EMICard from './components/EMICard'
 import Dashboard from './components/Dashboard'
 
+const API = 'https://vehicle-emi-tracker.onrender.com'
+
 export default function App() {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
@@ -16,7 +18,7 @@ export default function App() {
     setError('')
     setResult(null)
     try {
-      const res = await axios.get(`/api/emi/${vehicleNumber}`)
+      const res = await axios.get(`${API}/api/emi/${vehicleNumber}`)
       setResult(res.data)
       setSearchHistory(prev => {
         const filtered = prev.filter(v => v !== vehicleNumber)
@@ -33,7 +35,7 @@ export default function App() {
   const handleMarkPaid = async (vehicleNumber, emiId) => {
     try {
       const today = new Date().toISOString().split('T')[0]
-      await axios.patch(`/api/emi/${vehicleNumber}/${emiId}`, { status: 'paid', paid_date: today })
+      await axios.patch(`${API}/api/emi/${vehicleNumber}/${emiId}`, { status: 'paid', paid_date: today })
       handleSearch(vehicleNumber)
     } catch {
       alert('Failed to update EMI status.')
@@ -77,7 +79,7 @@ export default function App() {
           }}>Vehicle Finance Portal</span>
         </div>
 
-        {page === 'dashboard' && <Dashboard />}
+        {page === 'dashboard' && <Dashboard api={API} />}
 
         {page === 'search' && (
           <>
